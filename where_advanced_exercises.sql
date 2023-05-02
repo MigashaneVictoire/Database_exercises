@@ -17,8 +17,16 @@ of the top three results? Does it match the previous question?
 */
 SELECT emp_no
 FROM employees
-WHERE first_name = 'Irena' or 'Vidya' or 'Maya'
+WHERE first_name = 'Irena' or 'Vidya' or 'Maya' -- Incorrect, will only find Irena
 LIMIT 3;
+#10200, 1397, 10610
+
+/*
+Solution: 
+first_name = 'Irena' 
+OR first_name = 'Vidya'
+OR first_name = 'Maya'
+*/
 
 /*
 3. Find all current or previous employees with first names 'Irena', 
@@ -28,8 +36,16 @@ number of the top three results.
 SELECT emp_no
 FROM employees
 WHERE gender = "M"
-AND first_name = 'Irena' or 'Vidya' or 'Maya'
+AND first_name = 'Irena' or 'Vidya' or 'Maya' -- Incorrect, will only find Irena
 LIMIT 3;
+
+/*
+Solution: 
+first_name = 'Irena' 
+OR first_name = 'Vidya'
+OR first_name = 'Maya'
+*/
+
 
 # 4. Find all unique last names that start with 'E'
 SELECT DISTINCT last_name
@@ -51,8 +67,8 @@ AND NOT last_name LIKE "E%";
 # 7. Find all unique last names that start and end with E.
 SELECT DISTINCT last_name
 FROM employees
-WHERE last_name LIKE "%E" 
-AND last_name LIKE "E%";
+WHERE last_name LIKE "%E" -- Better solution WHERE last_name LIKE "E%E" 
+AND last_name LIKE "E%"; 
 
 # 8. Find all current or previous employees hired in the 90s, Ebdter a cinnebt witg tio three enplyee bumbers .
 SELECT *
