@@ -29,8 +29,9 @@ DESCRIBE employees; -- used this syntax to solve question 11 to 13
 dept_emp
 dept_manager
 salaries
-
 */
+-- class responce: all the tables
+
 # 12. Which table(s) do you think contain a string type column? (Write this question and your answer in a comment)
 /*
 These table contains numeric datatypes:
@@ -38,6 +39,7 @@ departments
 dept_emp
 dept_manager
 employees
+titles
 */
 
 # Which table(s) do you think contain a date type column? (Write this question and your answer in a comment)
@@ -54,6 +56,7 @@ titles
 /*
 departements has impormation about the department but employees has a detailed column description for employees
 */
+-- class responce: No direct relationship
 
 # Show the SQL that created the dept_manager table. Write the SQL it takes to show this as your exercise solution.
 -- SHOW CREATE TABLE dept_manager;
