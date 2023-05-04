@@ -39,7 +39,7 @@ GROUP BY last_name;
 SELECT gender, count(*)
 FROM employees
 WHERE first_name IN ('Irena', 'Vidya', 'Maya')
-GROUP BY gender;
+GROUP BY gender, first_name;
 
 -- 8. Using your query that generates a username for all of the employees, generate a count employees for each unique username.
 SELECT LOWER(CONCAT(
@@ -50,7 +50,7 @@ SUBSTR(birth_date, 6,2),
 SUBSTR(birth_date, 3,2))) AS username,
  count(*)
 FROM employees
-GROUP BY emp_no
+GROUP BY username
 LIMIT 10;
 
 -- 9. From your previous query, are there any duplicate usernames? What is the higest number of times a username shows up? Bonus: How many duplicate usernames are there from your previous query?
@@ -60,11 +60,12 @@ SUBSTR(last_name, 1,4),
 "_",
 SUBSTR(birth_date, 6,2), 
 SUBSTR(birth_date, 3,2))) AS username,
- count(*) 
+ count(*) num_rows
 FROM employees
-GROUP BY emp_no
+GROUP BY username
 HAVING count(username) != 1
-LIMIT 10;
-# -> No duplicates
-# -> 1 
-# -> 0 duplicates
+ORDER BY num_rows DESC;
+
+# -> Yes
+# -> 6
+# ->  13000duplicates
