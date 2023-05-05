@@ -94,7 +94,7 @@ WHERE
 -- 4. Find the current titles of employees currently working in the Customer Service department.
 
 SELECT 
-    T.title, COUNT(T.title)
+    T.title, COUNT(T.title) AS coiunt
 FROM
     dept_emp DE
         JOIN
@@ -104,7 +104,9 @@ FROM
 WHERE
     T.to_date LIKE '9999%'
         AND D.dept_name = 'Customer Service'
-GROUP BY T.title;
+        AND DE.to_date LIKE '9999%'
+GROUP BY T.title
+ORDER BY title;
 
 
 -- 5. Find the current salary of all current managers.
@@ -126,7 +128,9 @@ FROM
     titles t ON de.emp_no = t.emp_no
 WHERE
     s.to_date LIKE '999%'
-        AND t.title = 'Manager';
+        AND t.title = 'Manager'
+        AND t.to_date LIKE '999%'
+	ORDER BY d.dept_name;
 
 -- 6. Find the number of current employees in each department.
 
@@ -152,6 +156,7 @@ FROM
     salaries s ON de.emp_no = s.emp_no
 WHERE
     de.to_date LIKE '999%'
+    AND s.to_date LIKE '999%'
 GROUP BY d.dept_name
 ORDER BY avg_salary DESC
 LIMIT 1;
@@ -187,7 +192,8 @@ FROM
 	salaries s ON dm.emp_no = s.emp_no
 WHERE
     dm.to_date LIKE '999%'
-ORDER BY s.salary DESC,1,2, d.dept_name;
+ORDER BY s.salary DESC,1,2, d.dept_name
+LIMIT 1;
 
 -- 10.  Determine the average salary for each department. Use all salary information and round your results.
 
@@ -201,16 +207,7 @@ FROM
     salaries s ON de.emp_no = s.emp_no
 WHERE
     de.to_date LIKE '999%'
+    AND s.to_date LIKE "9999%"
+    AND s.to_date LIKE '999%'
 GROUP BY d.dept_name
 ORDER BY avg_salary DESC;
-
--- 11. Bonus Find the names of all current employees, their department name, and their current manager's name.
-
-SELECT CONCAT(e.first_name, e.last_name), d.dept_name, 
-	(SELECT CONCAT(e.first_name, e.last_name)
-    WHERE t.title LIKE "M%")
-FROM dept_emp de
-JOIN employees e ON de.emp_no = e.emp_no
-JOIN departments d ON de.dept_no = d.dept_no
-JOIN titles t ON de.emp_no = t.emp_no
-WHERE de.to_date LIKE '999%'
