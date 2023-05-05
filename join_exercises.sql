@@ -211,3 +211,16 @@ WHERE
     AND s.to_date LIKE '999%'
 GROUP BY d.dept_name
 ORDER BY avg_salary DESC;
+
+-- 11. Bonus Find the names of all current employees, their department name, and their current manager's name.
+
+SELECT 
+    d.dept_no, d.dept_name, CONCAT(first_name, last_name)
+FROM
+    dept_manager dm
+        JOIN
+    employees e ON dm.emp_no = e.emp_no
+        JOIN
+    departments d ON dm.dept_no = d.dept_no
+WHERE
+    dm.to_date LIKE '999%';
