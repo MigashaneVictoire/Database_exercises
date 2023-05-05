@@ -57,7 +57,8 @@ LIMIT 5;
 
 SHOW CREATE TABLE titles; -- emp_no, title
 SELECT *
-FROM titles;
+FROM titles
+WHERE title LIKE "M%";
 
 SHOW CREATE TABLE salaries; -- emp_no, salary
 SELECT *
@@ -175,7 +176,7 @@ LIMIT 1;
 -- 9. Which current department manager has the highest salary?
 
 SELECT 
-    first_name, last_name, salary, d.dept_name
+    e.first_name, e.last_name, s.salary, d.dept_name
 FROM
     dept_manager dm
         JOIN
@@ -186,7 +187,30 @@ FROM
 	salaries s ON dm.emp_no = s.emp_no
 WHERE
     dm.to_date LIKE '999%'
-ORDER BY d.dept_name, salary DESC;
+ORDER BY s.salary DESC,1,2, d.dept_name;
 
+-- 10.  Determine the average salary for each department. Use all salary information and round your results.
 
+SELECT 
+    d.dept_name, ROUND(AVG(s.salary),0) avg_salary
+FROM
+    dept_emp de
+        JOIN
+    departments d ON de.dept_no = d.dept_no
+        JOIN
+    salaries s ON de.emp_no = s.emp_no
+WHERE
+    de.to_date LIKE '999%'
+GROUP BY d.dept_name
+ORDER BY avg_salary DESC;
 
+-- 11. Bonus Find the names of all current employees, their department name, and their current manager's name.
+
+SELECT CONCAT(e.first_name, e.last_name), d.dept_name, 
+	(SELECT CONCAT(e.first_name, e.last_name)
+    WHERE t.title LIKE "M%")
+FROM dept_emp de
+JOIN employees e ON de.emp_no = e.emp_no
+JOIN departments d ON de.dept_no = d.dept_no
+JOIN titles t ON de.emp_no = t.emp_no
+WHERE de.to_date LIKE '999%'
