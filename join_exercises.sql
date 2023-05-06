@@ -214,13 +214,31 @@ ORDER BY avg_salary DESC;
 
 -- 11. Bonus Find the names of all current employees, their department name, and their current manager's name.
 
-SELECT 
-    d.dept_no, d.dept_name, CONCAT(first_name, last_name)
+-- current employees, their department name
+SELECT emp_no, dept_no, CONCAT(e.first_name, " ", e.last_name)
+FROM dept_emp de
+join employees e using (emp_no)
+join departments using (dept_no)
+where de.to_date > now();
+
+-- current manager and there departments 
+select dept_no, first_name, last_name, d.dept_name
+from dept_manager dm
+join employees e using (emp_no)
+join departments d using (dept_no)
+where dm.to_date > now();
+
+-- combine using table sub-querie
+SELECT emp_name, dept_name, CONCAT(first_name, ' ', last_name) AS manager
 FROM
-    dept_manager dm
-        JOIN
-    employees e ON dm.emp_no = e.emp_no
-        JOIN
-    departments d ON dm.dept_no = d.dept_no
-WHERE
-    dm.to_date LIKE '999%';
+    (SELECT emp_no, dept_no, CONCAT(e.first_name, ' ', e.last_name) emp_name
+    FROM dept_emp de
+    JOIN employees e USING (emp_no)
+    JOIN departments USING (dept_no)
+    WHERE de.to_date > NOW()) AS emp_and_dept
+LEFT JOIN
+    (SELECT dept_no, first_name, last_name, d.dept_name
+    FROM dept_manager dm
+    JOIN employees e USING (emp_no)
+    JOIN departments d USING (dept_no)
+    WHERE dm.to_date > NOW()) AS man_and_dept USING (dept_no)
