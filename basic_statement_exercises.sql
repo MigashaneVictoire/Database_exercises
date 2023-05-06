@@ -1,3 +1,5 @@
+# Basic Statements Exercise
+
 SHOW DATABASES;
 
 # 1. Use the albums_db database.
@@ -15,7 +17,7 @@ FROM albums;
 # 4. What do you think the sales column represents?
 SELECT sales
 FROM albums;
--- column "sales" contains sale prices in float datatype
+-- column "sales" contains sale prices and is float datatype
 
 # 5. Find the name of all albums by Pink Floyd.
 SELECT name
@@ -23,7 +25,7 @@ FROM albums
 WHERE artist = "Pink Floyd";
 
 # 6. What is the year Sgt. Pepper's Lonely Hearts Club Band was released?
-SELECT release_date
+SELECT release_date AS "Release Date"
 FROM albums
 WHERE name = "Sgt. Pepper's Lonely Hearts Club Band";
 
@@ -35,9 +37,15 @@ WHERE name = "Nevermind";
 # 8. Which albums were released in the 1990s?
 SELECT name
 FROM albums
-WHERE release_date BETWEEN 1990 AND 2000;
+WHERE release_date BETWEEN 1990 AND 1999;
 
-# 9. Which albums had less than 20 million certified sales? Rename this column as low_selling_albums.
+-- Similar solution
+SELECT name
+FROM albums
+WHERE release_date LIKE "199%";
+
+# 9. Which albums had less than 20 million certified sales? 
+#Rename this column as low_selling_albums.
 SELECT name AS low_selling_albums
 FROM albums
 WHERE sales <= 20;
