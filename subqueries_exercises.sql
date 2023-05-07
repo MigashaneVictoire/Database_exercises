@@ -1,24 +1,5 @@
- USE employees;
- SHOW TABLES;
-         
-SELECT *
-FROM titles;
-
-SELECT *
-FROM employees;
-
-SELECT *
-FROM dept_emp;
-
-SELECT *
-FROM dept_manager;
-
-SELECT *
-FROM salaries;
-
-SELECT *
-FROM departments;
-         
+ # Subqueries
+ 
 -- 1. Find all the current employees with the same hire date as employee 101010 using a subquery.
  SELECT *
  FROM employees
@@ -37,7 +18,8 @@ WHERE emp_no IN (SELECT emp_no -- return all employees with first name Aamod
 		AND  t.to_date LIKE "999%"
 GROUP BY t.title;
 
--- 3. How many people in the employees table are no longer working for the company? Give the answer in a comment in your code.
+-- 3. How many people in the employees table are no longer working for the company? 
+-- Give the answer in a comment in your code.
 
 SELECT count(*)
 FROM employees
@@ -47,22 +29,21 @@ WHERE emp_no NOT IN (SELECT emp_no
 				);
                 
                 
--- 4. Find all the current department managers that are female. List their names in a comment in your code.
+-- 4. Find all the current department managers that are female. 
+-- List their names in a comment in your code.
 
+-- column sub-query
 SELECT concat(first_name, " ",last_name), gender
 FROM employees
 WHERE emp_no IN (-- Get all curr dept manager employee numbers
 				SELECT emp_no
 				FROM titles
 				WHERE title = "Manager"
-				AND to_date LIKE "999%"
+				AND to_date > NOW()
 				)
 	AND gender = "F";
 
-/* My subquery
-SELECT emp_no
-FROM employees
-WHERE gender = 'F';*/
+-- Table sub-query
 SELECT CONCAT(first_name, ' ', last_name)
 FROM (
 		SELECT emp_no, first_name, last_name
@@ -71,30 +52,48 @@ FROM (
 JOIN dept_manager ON e.emp_no = dept_manager.emp_no
 where dept_manager.to_date = '9999-01-01';
 
--- 5. Find all the employees who currently have a higher salary than the companies overall, historical average salary.
-SELECT AVG(salary) -- historic average salary
-FROM salaries;
+-- 5. Find all the employees who currently have a higher salary than 
+-- the companies overall, historical average salary.
 
+-- Get history average salary
+SELECT avg(salary)
+FROM salaries
+WHERE to_date < now();
+
+-- Use row sub-query
+-- connect employees to salaries and compare current salary to history salary 
+SELECT emp_no, first_name, last_name, salary
+FROM salaries
+JOIN employees USING (emp_no)
+WHERE salary > (SELECT avg(salary)
+			FROM salaries
+			WHERE to_date < now()) -- 63054.4341
+	AND to_date > now();
+
+-- 6. How many current salaries are within 1 standard deviation of the current highest salary? 
+-- (Hint: you can use a built in function to calculate the standard deviation.) What percentage of all salaries is this?
+
+-- Find curr salaries
 SELECT *
-FROM dept_emp
-WHERE to_date > now()
-AND salariy > (Select avg(salary) from salaries);
--- 6. How many current salaries are within 1 standard deviation of the current highest salary? (Hint: you can use a built in function to calculate the standard deviation.) What percentage of all salaries is this?
+FROM salaries
+WHERE to_date > now();
 
-select count(*)
-from slaries
-where to_date > now()
-and salary > (
-select max(salary) from salaries where to_date > now())
-select std(salary) from slaries where to_date > now())
-from salaries
-where to_date > now()) * 100
--- Hint You will likely use multiple subqueries in a variety of ways
--- Hint It's a good practice to write out all of the small queries that you can. Add a comment above the query showing the number of rows returned. You will use this number (or the query that produced it) in other, larger queries.
+-- Find highest salary
+SELECT max(salary)
+FROM salaries
+WHERE to_date > now();
 
--- BONUS
--- Find all the department names that currently have female managers.
--- Find the first and last name of the employee with the highest salary.
--- Find the department name that the employee with the highest salary works in.
+-- Find the standard deviation
+SELECT std(salary)
+FROM salaries
+WHERE to_date > now();
 
--- Who is the highest paid employee within each department.
+SELECT count(*)
+FROM salaries
+WHERE salary > (SELECT max(salary)
+		FROM salaries
+		WHERE to_date > now()) -
+				(SELECT std(salary)
+				FROM salaries
+				WHERE to_date > now())
+	AND to_date > now();
