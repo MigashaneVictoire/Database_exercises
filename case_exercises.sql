@@ -1,5 +1,8 @@
-USE empployees;
+# CASE Exercises
 
+USE employees;
+show databases;
+select database();
 -- 1. Write a query that returns all employees, their department number, 
 -- their start date, their end date, and a new column 'is_current_employee' that 
 -- is a 1 if the employee is still with the company and 0 if not.
@@ -9,6 +12,11 @@ SELECT *,
 		when to_date > now() then 1
         else 0
     end is_current_employee
+FROM dept_emp;
+
+-- Or 
+SELECT *,
+	if (to_date > now(), 1, 0) is_current_employee
 FROM dept_emp;
 
 -- 2. Write a query that returns all employee names (previous and current), 
@@ -30,7 +38,7 @@ SELECT
     end decade, count(*) count
 FROM employees
 GROUP BY decade;
--- What is the current average salary for each of the following department groups: R&D, Sales & Marketing, Prod & QM, Finance & HR, Customer Service?
+-- 4. What is the current average salary for each of the following department groups: R&D, Sales & Marketing, Prod & QM, Finance & HR, Customer Service?
 SELECT 
 	case
     when d.dept_name LIKE "Research" OR dept_name LIKE "Development" then "R&D"
@@ -46,3 +54,5 @@ JOIN departments d USING (dept_no)
 WHERE s.to_date > now()
 GROUP BY dept_groups
 ORDER BY avg_salary;
+
+
